@@ -151,7 +151,7 @@ namespace FireAndWaterDesign
                 waterGirlX -= 5;
             }
             if (dDown)
-            {
+            { 
                 waterGirlX += 5;
             }
             if (jumping)
