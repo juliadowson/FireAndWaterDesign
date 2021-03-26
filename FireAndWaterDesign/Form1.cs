@@ -15,22 +15,36 @@ namespace FireAndWaterDesign
     {
         SolidBrush wallBrush = new SolidBrush(Color.OliveDrab);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
-        SolidBrush doorBrush = new SolidBrush(Color.DarkBlue);
+        SolidBrush redBrush = new SolidBrush(Color.Red);
+        SolidBrush doorBlueBrush = new SolidBrush(Color.DarkBlue);
+        SolidBrush doorRedBrush = new SolidBrush(Color.DarkRed);
+        Image fireBoy; // = new Image(Properties.Resources.fireboyImage);
 
         int wallThick = 15;
 
-        bool jumping = false;
+        bool jumpingGirl = false;
         bool dDown = false;
         bool aDown = false;
 
-        int waterGirlX = 30;
-        int waterGirlY = 405;
-        //int playerSpeed = 7;
-        int playerSize = 20;
+        bool jumpingBoy = false;
+        bool leftArrow = false;
+        bool rightArrow = false;
 
+        int waterGirlX = 30;  //before 30, 405
+        int waterGirlY = 405;  
+        int fireBoyX = 30;  //before 30, 340
+        int fireBoyY = 340;
+        int playerSpeed = 5;
+        int player2Speed = 5;
+        int playerLength = 20;  //normal = 20
+        int playerHeight = 35;
+
+        string gameState = "waiting";
 
         int jumpSpeed = 10;
+        int jump2Speed = 10;
         int force = 7;
+        int force2 = 7;
 
         List<int> landingXList = new List<int>();
         List<int> landingYList = new List<int>();
@@ -40,8 +54,7 @@ namespace FireAndWaterDesign
         public Form1()
         {
             InitializeComponent();
-            
-            
+
             landingXList.Add(0); //bottom
             landingYList.Add(425);
             landingLList.Add(800);
@@ -102,59 +115,101 @@ namespace FireAndWaterDesign
                     break;
                 case Keys.D:
                     dDown = true;
-                    break;                    
+                    break;
+                case Keys.Left:
+                    leftArrow = true;
+                    break;
+                case Keys.Right:
+                    rightArrow = true;
+                    break;
+                case Keys.Space:
+                    if (gameState == "waiting" || gameState == "gameWon")
+                    {
+                        GameInitialize();
+                    }
+                    break;
+                case Keys.Escape:
+                    if (gameState == "waiting" || gameState == "gameWon")
+                    {
+                        Application.Exit();
+                    }
+                    break;
             }
-            if (e.KeyCode == Keys.W && !jumping)
+            if (e.KeyCode == Keys.W && !jumpingGirl)
             {
-                jumping = true;
+                jumpingGirl = true;
             }
+            if (e.KeyCode == Keys.Up && !jumpingBoy)
+            {
+                jumpingBoy = true;
+            }
+
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
-            {              
+            {
                 case Keys.A:
                     aDown = false;
                     break;
                 case Keys.D:
                     dDown = false;
                     break;
+                case Keys.Left:
+                    leftArrow = false;
+                    break;
+                case Keys.Right:
+                    rightArrow = false;
+                    break;
             }
-            if (jumping)
+            if (jumpingGirl)
             {
-                jumping = false;
+                jumpingGirl = false;
+            }
+            if (jumpingBoy)
+            {
+                jumpingBoy = false;
             }
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        public void GameInitialize()
         {
-            for (int i = 0; i < landingXList.Count(); i++)
-            {
-                e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]); 
-            }
+            fireBoy = (Properties.Resources.fireboyImage);
 
-            e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerSize, playerSize);
-            e.Graphics.FillRectangle(doorBrush, 440, 40, 30, 35);
+            fireLabel.Text = "";
+            waterLabel.Text = "";
+            outputLabel.Text = "";
+            mainLabel.Text = "";
+
+            gameTimer.Enabled = true;
+            gameState = "running";
+
+            waterGirlX = 30; //30, 405
+            waterGirlY = 405;
+            fireBoyX = 30; //30, 340
+            fireBoyY = 340;
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
             #region move 
             waterGirlY += jumpSpeed;
-            if (jumping && force < 0)
+            fireBoyY += jump2Speed;
+            //watergirl moving
+            if (jumpingGirl && force < 0)
             {
-                jumping = false;
+                jumpingGirl = false;
             }
             if (aDown)
             {
-                waterGirlX -= 5;
+                waterGirlX -= playerSpeed;
             }
             if (dDown)
-            { 
-                waterGirlX += 5;
+            {
+                waterGirlX += playerSpeed;
             }
-            if (jumping)
+            if (jumpingGirl)
             {
                 jumpSpeed = -12;
                 force -= 1;
@@ -163,32 +218,128 @@ namespace FireAndWaterDesign
             {
                 jumpSpeed = 12;
             }
+
+            //fireboy moving
+            if (jumpingBoy && force2 < 0)
+            {
+                jumpingBoy = false;
+            }
+            if (leftArrow)
+            {
+                fireBoyX -= player2Speed;
+            }
+            if (rightArrow)
+            {
+                fireBoyX += player2Speed;
+            }
+            if (jumpingBoy)
+            {
+                jump2Speed = -12;
+                force2 -= 1;
+            }
+            else
+            {
+                jump2Speed = 12;
+            }
             #endregion 
 
-            Rectangle waterGirlRec = new Rectangle(waterGirlX, waterGirlY, playerSize, playerSize);
+            Rectangle waterGirlRec = new Rectangle(waterGirlX, waterGirlY, playerLength, playerHeight);
+            Rectangle fireBoyRec = new Rectangle(fireBoyX, fireBoyY, playerLength, playerHeight);
 
             for (int i = 0; i < landingXList.Count(); i++)
             {
-                Rectangle land1Rec = new Rectangle (landingXList[i], landingYList[i], landingLList[i], 1);
+                Rectangle landRec = new Rectangle(landingXList[i], landingYList[i], landingLList[i], 1);
+                Rectangle bottomLand = new Rectangle(landingXList[i], landingYList[i] + wallThick, landingLList[i], 2);
+                Rectangle leftWallRec = new Rectangle(0, landingYList[i], wallThick, landingHList[i]);
+                Rectangle rightWallRec = new Rectangle(572, 0, wallThick, 600);
 
-                if (waterGirlRec.IntersectsWith(land1Rec) && !jumping)
+                #region watergirl intersections 
+                if (waterGirlRec.IntersectsWith(landRec) && !jumpingGirl)
                 {
                     force = 7;
-                    waterGirlY = landingYList[i] - playerSize;
+                    waterGirlY = landingYList[i] - playerHeight;
                 }
 
+                if (waterGirlRec.IntersectsWith(bottomLand))
+                {
+                    waterGirlY = waterGirlY + 10;
+                }
+
+                if (waterGirlRec.IntersectsWith(leftWallRec))
+                {
+                    waterGirlX = waterGirlX + playerSpeed;
+                }
+
+                if (waterGirlRec.IntersectsWith(rightWallRec))
+                {
+                    waterGirlX = waterGirlX - 1;
+                }
+                #endregion
+
+                #region fireboy intersections
+                if (fireBoyRec.IntersectsWith(landRec) && !jumpingBoy)
+                {
+                    force2 = 7;
+                    fireBoyY = landingYList[i] - playerHeight;
+                }
+
+                if (fireBoyRec.IntersectsWith(bottomLand))
+                {
+                    fireBoyY = fireBoyY + 10;
+                }
+
+                if (fireBoyRec.IntersectsWith(leftWallRec))
+                {
+                    fireBoyX = fireBoyX + player2Speed;
+                }
+
+                if (fireBoyRec.IntersectsWith(rightWallRec))
+                {
+                    fireBoyX = fireBoyX - 1;
+                }
+                #endregion
             }
 
-            Rectangle doorRec = new Rectangle(440, 40, 30, 35);
-            if (waterGirlRec.IntersectsWith(doorRec))
+            Rectangle waterDoorRec = new Rectangle(464, 40, 10, 35);
+            Rectangle fireDoorRec = new Rectangle(490, 40, 10, 35);
+
+            if (waterGirlRec.IntersectsWith(waterDoorRec) && fireBoyRec.IntersectsWith(fireDoorRec))
             {
-                Thread.Sleep(2000);
-                Application.Exit();
+                Thread.Sleep(500);
+                gameState = "gameWon";
             }
-
             Refresh();
         }
 
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if (gameState == "waiting")
+            {
+                fireLabel.Text = "Fireboy";
+                waterLabel.Text = "Watergirl";
+                mainLabel.Text = "and";
+                outputLabel.Text = "Press Space to Start, Escape to Exit";
+            }
+            else if (gameState == "running")
+            {
+                for (int i = 0; i < landingXList.Count(); i++)
+                {
+                    e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]);
+                }
 
+                e.Graphics.FillRectangle(doorBlueBrush, 440, 40, 30, 35);
+                e.Graphics.FillRectangle(doorRedBrush, 480, 40, 30, 35);
+                e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerLength, playerHeight);
+                e.Graphics.FillRectangle(redBrush, fireBoyX, fireBoyY, playerLength, playerHeight);
+                //e.Graphics.DrawImage(fireBoy, fireBoyX, fireBoyY - 20, 30, 50);
+                e.Graphics.DrawImage(fireBoy, fireBoyX, fireBoyY, playerLength, playerHeight);
+            }
+            else if (gameState == "gameWon")
+            {
+                mainLabel.Text = "You won!";
+                outputLabel.Text = "Press Space to Start, Escape to Exit";
+                gameTimer.Enabled = false;
+            }
+        }
     }
 }
