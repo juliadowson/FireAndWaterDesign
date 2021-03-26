@@ -37,7 +37,7 @@ namespace FireAndWaterDesign
         int playerSpeed = 5;
         int player2Speed = 5;
         int playerLength = 20;  //normal = 20
-        int playerHeight = 35;
+        int playerHeight = 20;
 
         string gameState = "waiting";
 
