@@ -19,6 +19,7 @@ namespace FireAndWaterDesign
         SolidBrush doorBlueBrush = new SolidBrush(Color.DarkBlue);
         SolidBrush doorRedBrush = new SolidBrush(Color.DarkRed);
         Image fireBoy; // = new Image(Properties.Resources.fireboyImage);
+        Image waterGirl;
 
         int wallThick = 15;
 
@@ -30,14 +31,14 @@ namespace FireAndWaterDesign
         bool leftArrow = false;
         bool rightArrow = false;
 
-        int waterGirlX = 30;  //before 30, 405
-        int waterGirlY = 405;  
-        int fireBoyX = 30;  //before 30, 340
-        int fireBoyY = 340;
+        int waterGirlX = 30;  
+        int waterGirlY = 375;  
+        int fireBoyX = 30; 
+        int fireBoyY = 302;
         int playerSpeed = 5;
         int player2Speed = 5;
-        int playerLength = 20;  //normal = 20
-        int playerHeight = 20;
+        int playerLength = 21;  
+        int playerHeight = 40;
 
         string gameState = "waiting";
 
@@ -176,6 +177,7 @@ namespace FireAndWaterDesign
         public void GameInitialize()
         {
             fireBoy = (Properties.Resources.fireboyImage);
+            waterGirl = (Properties.Resources.watergirlImage);
 
             fireLabel.Text = "";
             waterLabel.Text = "";
@@ -186,9 +188,9 @@ namespace FireAndWaterDesign
             gameState = "running";
 
             waterGirlX = 30; //30, 405
-            waterGirlY = 405;
+            waterGirlY = 385;
             fireBoyX = 30; //30, 340
-            fireBoyY = 340;
+            fireBoyY = 320;
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -243,8 +245,8 @@ namespace FireAndWaterDesign
             }
             #endregion 
 
-            Rectangle waterGirlRec = new Rectangle(waterGirlX, waterGirlY, playerLength, playerHeight);
-            Rectangle fireBoyRec = new Rectangle(fireBoyX, fireBoyY, playerLength, playerHeight);
+            Rectangle waterGirlRec = new Rectangle(waterGirlX, waterGirlY + 20, playerLength, playerHeight - 20);
+            Rectangle fireBoyRec = new Rectangle(fireBoyX, fireBoyY + 20, playerLength, playerHeight - 20);
 
             for (int i = 0; i < landingXList.Count(); i++)
             {
@@ -327,12 +329,13 @@ namespace FireAndWaterDesign
                     e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]);
                 }
 
-                e.Graphics.FillRectangle(doorBlueBrush, 440, 40, 30, 35);
-                e.Graphics.FillRectangle(doorRedBrush, 480, 40, 30, 35);
-                e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerLength, playerHeight);
-                e.Graphics.FillRectangle(redBrush, fireBoyX, fireBoyY, playerLength, playerHeight);
-                //e.Graphics.DrawImage(fireBoy, fireBoyX, fireBoyY - 20, 30, 50);
+                e.Graphics.FillRectangle(blueBrush, 300, 215, 40, 15); //water puddle
+                e.Graphics.FillRectangle(doorBlueBrush, 440, 35, 30, 40);
+                e.Graphics.FillRectangle(doorRedBrush, 480, 35, 30, 40);
+                //e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerLength, 20);
+                //e.Graphics.FillRectangle(redBrush, fireBoyX, fireBoyY, playerLength, playerHeight);
                 e.Graphics.DrawImage(fireBoy, fireBoyX, fireBoyY, playerLength, playerHeight);
+                e.Graphics.DrawImage(waterGirl, waterGirlX, waterGirlY, playerLength, playerHeight);
             }
             else if (gameState == "gameWon")
             {
