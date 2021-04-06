@@ -8,11 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Media;
 
 namespace FireAndWaterDesign
 {
     public partial class Form1 : Form
     {
+        SoundPlayer jumpSound = new SoundPlayer(Properties.Resources.jump);
+        SoundPlayer lostSound = new SoundPlayer(Properties.Resources.end);
+
+
         SolidBrush wallBrush = new SolidBrush(Color.OliveDrab);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -124,13 +129,13 @@ namespace FireAndWaterDesign
                     rightArrow = true;
                     break;
                 case Keys.Space:
-                    if (gameState == "waiting" || gameState == "gameWon")
+                    if (gameState == "waiting" || gameState == "gameWon" || gameState == "gameLost")
                     {
                         GameInitialize();
                     }
                     break;
                 case Keys.Escape:
-                    if (gameState == "waiting" || gameState == "gameWon")
+                    if (gameState == "waiting" || gameState == "gameWon" || gameState == "gameLost")
                     {
                         Application.Exit();
                     }
@@ -139,10 +144,12 @@ namespace FireAndWaterDesign
             if (e.KeyCode == Keys.W && !jumpingGirl)
             {
                 jumpingGirl = true;
+                jumpSound.Play();
             }
             if (e.KeyCode == Keys.Up && !jumpingBoy)
             {
                 jumpingBoy = true;
+                jumpSound.Play();
             }
 
         }
@@ -310,6 +317,13 @@ namespace FireAndWaterDesign
                 Thread.Sleep(500);
                 gameState = "gameWon";
             }
+
+            Rectangle waterPuddle = new Rectangle(285, 230, 10, 3);
+            Rectangle firePuddle = new Rectangle(350, 415, 10, 3);
+            if (fireBoyRec.IntersectsWith(waterPuddle) || waterGirlRec.IntersectsWith(firePuddle))
+            {
+                gameState = "gameLost";
+            }
             Refresh();
         }
 
@@ -329,7 +343,8 @@ namespace FireAndWaterDesign
                     e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]);
                 }
 
-                e.Graphics.FillRectangle(blueBrush, 300, 215, 40, 15); //water puddle
+                e.Graphics.FillRectangle(blueBrush, 265, 215, 40, 15); //water puddle
+                e.Graphics.FillRectangle(redBrush, 330, 420, 40, 15); //70
                 e.Graphics.FillRectangle(doorBlueBrush, 440, 35, 30, 40);
                 e.Graphics.FillRectangle(doorRedBrush, 480, 35, 30, 40);
                 //e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerLength, 20);
@@ -340,6 +355,13 @@ namespace FireAndWaterDesign
             else if (gameState == "gameWon")
             {
                 mainLabel.Text = "You won!";
+                outputLabel.Text = "Press Space to Start, Escape to Exit";
+                gameTimer.Enabled = false;
+            }
+            else if (gameState == "gameLost")
+            {
+                lostSound.Play();
+                mainLabel.Text = "You lost!";
                 outputLabel.Text = "Press Space to Start, Escape to Exit";
                 gameTimer.Enabled = false;
             }

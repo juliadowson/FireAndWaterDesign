@@ -89,5 +89,11 @@
   <ItemGroup>
     <None Include="Resources\fireboy-and-watergirl.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\344500__sharesynth__jump05.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\end.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
