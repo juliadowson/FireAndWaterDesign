@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*Julia Dowson 
+ * Mr. T 
+ * April 7, 2021
+ * This is a two player game based off the original Fireboy and Watergirl.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,25 +20,28 @@ namespace FireAndWaterDesign
 {
     public partial class Form1 : Form
     {
+        //creates sounds 
         SoundPlayer jumpSound = new SoundPlayer(Properties.Resources.jump);
         SoundPlayer lostSound = new SoundPlayer(Properties.Resources.end);
-        //SoundPlayer themeSound = new SoundPlayer(Properties.Resources.mainTheme);
         System.Windows.Media.MediaPlayer backMedia = new System.Windows.Media.MediaPlayer();
 
+        //creates the brushes and images 
         SolidBrush wallBrush = new SolidBrush(Color.OliveDrab);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush doorBlueBrush = new SolidBrush(Color.DarkBlue);
         SolidBrush doorRedBrush = new SolidBrush(Color.DarkRed);
-        Image fireBoy; // = new Image(Properties.Resources.fireboyImage);
+        Image fireBoy; 
         Image waterGirl;
 
         int wallThick = 15;
 
+        //watergirl control setup 
         bool jumpingGirl = false;
         bool dDown = false;
         bool aDown = false;
 
+        //fireboy control setup 
         bool jumpingBoy = false;
         bool leftArrow = false;
         bool rightArrow = false;
@@ -44,9 +53,7 @@ namespace FireAndWaterDesign
         int playerSpeed = 5;
         int player2Speed = 5;
         int playerLength = 21;  
-        int playerHeight = 40;
-
-        string gameState = "waiting";
+        int playerHeight = 40;     
 
         int jumpSpeed = 10;
         int jump2Speed = 10;
@@ -58,11 +65,12 @@ namespace FireAndWaterDesign
         List<int> landingLList = new List<int>();
         List<int> landingHList = new List<int>();
 
+        string gameState = "waiting";
+
         public Form1()
         {
             InitializeComponent();
-            
-
+           
             landingXList.Add(0); //bottom
             landingYList.Add(425);
             landingLList.Add(800);
@@ -145,11 +153,13 @@ namespace FireAndWaterDesign
                     }
                     break;
             }
+
             if (e.KeyCode == Keys.W && !jumpingGirl)
             {
                 jumpingGirl = true;
                 jumpSound.Play();
             }
+
             if (e.KeyCode == Keys.Up && !jumpingBoy)
             {
                 jumpingBoy = true;
@@ -175,10 +185,12 @@ namespace FireAndWaterDesign
                     rightArrow = false;
                     break;
             }
+
             if (jumpingGirl)
             {
                 jumpingGirl = false;
             }
+
             if (jumpingBoy)
             {
                 jumpingBoy = false;
@@ -199,9 +211,9 @@ namespace FireAndWaterDesign
             gameState = "running";
             backMedia.Play();
 
-            waterGirlX = 30; //30, 405
+            waterGirlX = 30; 
             waterGirlY = 385;
-            fireBoyX = 30; //30, 340
+            fireBoyX = 30; 
             fireBoyY = 320;
         }
 
@@ -210,19 +222,23 @@ namespace FireAndWaterDesign
             #region move 
             waterGirlY += jumpSpeed;
             fireBoyY += jump2Speed;
+
             //watergirl moving
             if (jumpingGirl && force < 0)
             {
                 jumpingGirl = false;
             }
+
             if (aDown)
             {
                 waterGirlX -= playerSpeed;
             }
+
             if (dDown)
             {
                 waterGirlX += playerSpeed;
             }
+
             if (jumpingGirl)
             {
                 jumpSpeed = -12;
@@ -238,14 +254,17 @@ namespace FireAndWaterDesign
             {
                 jumpingBoy = false;
             }
+
             if (leftArrow)
             {
                 fireBoyX -= player2Speed;
             }
+
             if (rightArrow)
             {
                 fireBoyX += player2Speed;
             }
+
             if (jumpingBoy)
             {
                 jump2Speed = -12;
@@ -314,6 +333,15 @@ namespace FireAndWaterDesign
                 #endregion
             }
 
+            //if you run into the 'puddles'
+            Rectangle waterPuddle = new Rectangle(285, 230, 10, 3);
+            Rectangle firePuddle = new Rectangle(350, 415, 10, 3);
+            if (fireBoyRec.IntersectsWith(waterPuddle) || waterGirlRec.IntersectsWith(firePuddle))
+            {
+                gameState = "gameLost";
+            }
+
+            //how to win the game, both players are touching their door 
             Rectangle waterDoorRec = new Rectangle(464, 40, 10, 35);
             Rectangle fireDoorRec = new Rectangle(490, 40, 10, 35);
 
@@ -323,13 +351,7 @@ namespace FireAndWaterDesign
                 backMedia.Stop();
                 gameState = "gameWon";
             }
-
-            Rectangle waterPuddle = new Rectangle(285, 230, 10, 3);
-            Rectangle firePuddle = new Rectangle(350, 415, 10, 3);
-            if (fireBoyRec.IntersectsWith(waterPuddle) || waterGirlRec.IntersectsWith(firePuddle))
-            {
-                gameState = "gameLost";
-            }
+           
             Refresh();
         }
 
@@ -347,15 +369,14 @@ namespace FireAndWaterDesign
                 
                 for (int i = 0; i < landingXList.Count(); i++)
                 {
+                    //draws all the landings and walls 
                     e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]);
                 }
 
                 e.Graphics.FillRectangle(blueBrush, 265, 215, 40, 15); //water puddle
-                e.Graphics.FillRectangle(redBrush, 330, 420, 40, 15); //70
+                e.Graphics.FillRectangle(redBrush, 330, 420, 40, 15); //fire puddle 
                 e.Graphics.FillRectangle(doorBlueBrush, 440, 35, 30, 40);
                 e.Graphics.FillRectangle(doorRedBrush, 480, 35, 30, 40);
-                //e.Graphics.FillRectangle(blueBrush, waterGirlX, waterGirlY, playerLength, 20);
-                //e.Graphics.FillRectangle(redBrush, fireBoyX, fireBoyY, playerLength, playerHeight);
                 e.Graphics.DrawImage(fireBoy, fireBoyX, fireBoyY, playerLength, playerHeight);
                 e.Graphics.DrawImage(waterGirl, waterGirlX, waterGirlY, playerLength, playerHeight);
             }
