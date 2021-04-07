@@ -16,7 +16,8 @@ namespace FireAndWaterDesign
     {
         SoundPlayer jumpSound = new SoundPlayer(Properties.Resources.jump);
         SoundPlayer lostSound = new SoundPlayer(Properties.Resources.end);
-
+        //SoundPlayer themeSound = new SoundPlayer(Properties.Resources.mainTheme);
+        System.Windows.Media.MediaPlayer backMedia = new System.Windows.Media.MediaPlayer();
 
         SolidBrush wallBrush = new SolidBrush(Color.OliveDrab);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
@@ -60,6 +61,7 @@ namespace FireAndWaterDesign
         public Form1()
         {
             InitializeComponent();
+            
 
             landingXList.Add(0); //bottom
             landingYList.Add(425);
@@ -110,6 +112,8 @@ namespace FireAndWaterDesign
             landingYList.Add(350);
             landingLList.Add(140);
             landingHList.Add(wallThick);
+
+            backMedia.Open(new Uri(Application.StartupPath + "/Resources/Fireboy and Watergirl Music (In-game quality).wav"));
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -193,6 +197,7 @@ namespace FireAndWaterDesign
 
             gameTimer.Enabled = true;
             gameState = "running";
+            backMedia.Play();
 
             waterGirlX = 30; //30, 405
             waterGirlY = 385;
@@ -315,6 +320,7 @@ namespace FireAndWaterDesign
             if (waterGirlRec.IntersectsWith(waterDoorRec) && fireBoyRec.IntersectsWith(fireDoorRec))
             {
                 Thread.Sleep(500);
+                backMedia.Stop();
                 gameState = "gameWon";
             }
 
@@ -338,6 +344,7 @@ namespace FireAndWaterDesign
             }
             else if (gameState == "running")
             {
+                
                 for (int i = 0; i < landingXList.Count(); i++)
                 {
                     e.Graphics.FillRectangle(wallBrush, landingXList[i], landingYList[i], landingLList[i], landingHList[i]);

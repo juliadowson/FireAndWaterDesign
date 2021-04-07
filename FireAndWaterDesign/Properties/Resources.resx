@@ -638,6 +638,9 @@
   <data name="jump" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\344500__sharesynth__jump05.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="mainTheme" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Fireboy and Watergirl Music (In-game quality).wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="watergirlImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAARkAAAHoCAYAAAB93purAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
