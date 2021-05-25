@@ -31,7 +31,7 @@ namespace FireAndWaterDesign
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush doorBlueBrush = new SolidBrush(Color.DarkBlue);
         SolidBrush doorRedBrush = new SolidBrush(Color.DarkRed);
-        Image fireBoy; 
+        Image fireBoy;
         Image waterGirl;
 
         int wallThick = 15;
@@ -46,14 +46,14 @@ namespace FireAndWaterDesign
         bool leftArrow = false;
         bool rightArrow = false;
 
-        int waterGirlX = 30;  
-        int waterGirlY = 375;  
-        int fireBoyX = 30; 
+        int waterGirlX = 30;
+        int waterGirlY = 375;
+        int fireBoyX = 30;
         int fireBoyY = 302;
         int playerSpeed = 5;
         int player2Speed = 5;
-        int playerLength = 21;  
-        int playerHeight = 40;     
+        int playerLength = 21;
+        int playerHeight = 40;
 
         int jumpSpeed = 10;
         int jump2Speed = 10;
@@ -70,7 +70,7 @@ namespace FireAndWaterDesign
         public Form1()
         {
             InitializeComponent();
-           
+
             landingXList.Add(0); //bottom
             landingYList.Add(425);
             landingLList.Add(800);
@@ -211,9 +211,9 @@ namespace FireAndWaterDesign
             gameState = "running";
             backMedia.Play();
 
-            waterGirlX = 30; 
+            waterGirlX = 30;
             waterGirlY = 385;
-            fireBoyX = 30; 
+            fireBoyX = 30;
             fireBoyY = 320;
         }
 
@@ -351,7 +351,7 @@ namespace FireAndWaterDesign
                 backMedia.Stop();
                 gameState = "gameWon";
             }
-           
+
             Refresh();
         }
 
@@ -366,7 +366,7 @@ namespace FireAndWaterDesign
             }
             else if (gameState == "running")
             {
-                
+
                 for (int i = 0; i < landingXList.Count(); i++)
                 {
                     //draws all the landings and walls 
